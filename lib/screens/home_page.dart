@@ -4,6 +4,7 @@ import 'package:gct/models/accidents.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/weather.dart';
 
@@ -30,6 +31,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   late Timer timer;
   late Timer refreshTimer;
+  late Timer basculeTimer;
+  late int timeToBascule = 60;
+  late bool isMessagedDisplayed = true;
+
   late String _timeString;
 
   final Color dataBgColor = const Color.fromARGB(235, 22, 67, 140);
@@ -50,15 +55,28 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _timeString = _formatDateTime(DateTime.now());
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
     refreshTimer = Timer.periodic(
-        const Duration(minutes: 60),
-        (Timer t) => getWeather().then((value) {
+        const Duration(seconds: 60),
+        (Timer t) => {
+              getWeather().then((value) {
+                print("getWeather");
+                setState(() {
+                  if (value != null) {
+                    temperature =
+                        (value.temperature?.celsius?.toStringAsFixed(0));
+                  }
+                });
+              }),
+              _onRefresh()
+            });
+
+    basculeTimer = Timer.periodic(
+        Duration(seconds: timeToBascule),
+        (Timer t) => {
               setState(() {
-                if (value != null) {
-                  temperature =
-                      (value.temperature?.celsius?.toStringAsFixed(0));
-                }
-              });
-            }));
+                isMessagedDisplayed = !isMessagedDisplayed;
+              }),
+              isMessagedDisplayed ? timeToBascule = 60 : timeToBascule = 10
+            });
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -67,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.dispose();
     timer.cancel();
     refreshTimer.cancel();
+    basculeTimer.cancel();
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -83,8 +102,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Future<dynamic> getWeather({counter = 0}) async {
-    double lat = 33.3395367;
-    double lon = 10.48969389999;
+    double lat = 34.3260332;
+    double lon = 8.4048415;
+
     WeatherFactory wf = WeatherFactory("92f1cfabd3ff63e1be3a6cc350d43018");
 
     try {
@@ -164,8 +184,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   // onRefresh //
   void _onRefresh() async {
-    await _getAccidents().then((value) =>
-        {_appProvider.setAccidents(_accidentsList), setState(() {})});
+    await _getAccidents().then((value) => {
+          print("refreshed"),
+          _appProvider.setAccidents(_accidentsList),
+          setState(() {})
+        });
     if (mounted) {
       setState(() {});
     }
@@ -197,17 +220,24 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       //API CALL
-
+                      String lang =
+                          messageController.text.contains(RegExp(r'[a-z]'))
+                              ? "Fr"
+                              : "Ar";
                       var item = {
                         "name": "GCT",
                         "nbr_jours_sans_accident":
                             int.parse(nbrJrsSansAccidentsController.text),
                         "nbr_totale_accidents":
                             int.parse(nbTotaleAccidentsController.text),
-                        "message": messageController.text
+                        "message": messageController.text,
+                        "lang":lang
                       };
 
-                      _updateAccident("63f48c54144ba124c86383fe", item);
+                      print(lang);
+
+                      _updateAccident(
+                          _accidentsList.elementAt(0).id.toString(), item);
 
                       Navigator.pop(context);
                     }
@@ -258,17 +288,60 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       child: Row(children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.5,
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                height: 50,
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: Row(
+                                    children: [
+                                      Image.asset("assets/images/gct_logo2.png",
+                                          scale: 10, fit: BoxFit.scaleDown),
+                                      Image.asset("assets/images/gct_logo.png",
+                                          scale: 1, fit: BoxFit.scaleDown),
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
+                                child: /* Image.asset(
+                                    "assets/images/logo_name.jpg",
+                                    scale: 5,
+                                    fit: BoxFit
+                                        .scaleDown),*/
+                                    const Text(
+                                  "Groupe Chimique Tunisien \n المجمع الكیمیائي التونسي ",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 40,
+                                      color: Colors.green,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ]),
+                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: Column(
+                          children: [
+                            Row(children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.1,
                                 child: const Text(
-                                  "التاريخ \n   ",
+                                  "",
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 30,
@@ -277,23 +350,175 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(20),
-                                color: Colors.grey[600],
-                                child: Text(
-                                  "${DateFormat('dd-MM-yyyy').format(DateTime.now())}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                alignment: Alignment.centerLeft,
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                child: const Text(
+                                  "DATE/HEURE/TEMPERATURE",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
                                       fontSize: 30,
                                       color: Colors.white,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Container(
+                              Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                child: const Text(
+                                  "التاريخ / توقيت / درجة الحرارة",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: const Text(
+                                  "",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ]),
+                            Row(children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.1,
+                                child: const Text(
+                                  "",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                              Container(
+                                  height: 60,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  // padding: const EdgeInsets.all(10),
+                                  //  margin: const EdgeInsets.all(20),
+                                  color: Colors.grey[600],
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.1,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          temperature.toString() + "°C",
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontSize: 40,
+                                              color: Colors.orange,
+                                              decoration: TextDecoration.none),
+                                        ),
+                                      ),
+                                      Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          child: isMessagedDisplayed
+                                              ? Marquee(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  text: _accidentsList
+                                                      .elementAt(0)
+                                                      .message
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    /* shadows: [
+                                              Shadow(
+                                                  color: Colors.white,
+                                                  blurRadius: 2),
+                                            ],*/
+                                                    //fontFamily: 'brick_led',
+                                                    color: Colors.white,
+                                                    fontSize: 40,
+                                                  ),
+                                                  // style:GoogleFonts.cairo(),
+
+                                                  velocity: _accidentsList
+                                                          .elementAt(0)
+                                                          .message
+                                                          .toString()
+                                                          .contains(
+                                                              RegExp(r'[a-z]'))
+                                                      ? 30
+                                                      : -30,
+                                                  // pauseAfterRound: const Duration(seconds: 2),
+                                                  blankSpace: 200,
+                                                )
+                                              : Text(
+                                                  "${DateFormat('dd-MM-yyyy').format(DateTime.now())}  $_timeString",
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      fontSize: 40,
+                                                      color: Colors.red,
+                                                      decoration:
+                                                          TextDecoration.none),
+                                                )),
+                                    ],
+                                  )),
+                              Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: const Text(
+                                  "رسالة اليوم\nMESSAGE DU JOUR",
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ]),
+
+                            /*     Row(children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      height: 50,
+                                      child: const Text(
+                                        "التاريخ \n   ",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            color: Colors.white,
+                                            decoration: TextDecoration.none),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.25,
+                                      padding: const EdgeInsets.all(10),
+                                      margin: const EdgeInsets.all(20),
+                                      color: Colors.grey[600],
+                                      child: Text(
+                                        "${DateFormat('dd-MM-yyyy').format(DateTime.now())}",
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 30,
+                                            color: Colors.white,
+                                            decoration: TextDecoration.none),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              /*   Container(
                           width: MediaQuery.of(context).size.width * 0.4,
                           padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                           child: Column(
@@ -316,57 +541,63 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                height: 50,
-                                child: const Text(
-                                  "التوقيت \n   ",
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      decoration: TextDecoration.none),
-                                ),
-                              ),
-                              Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  padding: const EdgeInsets.all(10),
-                                  margin: const EdgeInsets.all(20),
-                                  color: Colors.grey[600],
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        temperature.toString() + "°C",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.orange,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                      Text(
-                                        _timeString,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
+                     */
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.3,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      height: 50,
+                                      child: const Text(
+                                        "التوقيت \n   ",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
                                             fontSize: 30,
                                             color: Colors.white,
                                             decoration: TextDecoration.none),
                                       ),
-                                    ],
-                                  )),
-                            ],
-                          ),
-                        )
-                      ]),
-                    ),
+                                    ),
+                                    Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.25,
+                                        padding: const EdgeInsets.all(10),
+                                        margin: const EdgeInsets.all(20),
+                                        color: Colors.grey[600],
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              temperature.toString() + "°C",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  fontSize: 30,
+                                                  color: Colors.orange,
+                                                  decoration:
+                                                      TextDecoration.none),
+                                            ),
+                                            Text(
+                                              _timeString,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  fontSize: 30,
+                                                  color: Colors.white,
+                                                  decoration:
+                                                      TextDecoration.none),
+                                            ),
+                                          ],
+                                        )),
+                                  ],
+                                ),
+                              )
+                            ]),
+                       */
+                          ],
+                        )),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       child: Row(children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.35,
@@ -407,30 +638,36 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Image.asset("assets/images/1.png",
-                                        scale: 1, fit: BoxFit.scaleDown),
+                                        scale: 2, fit: BoxFit.scaleDown),
                                     Image.asset("assets/images/2.png",
-                                        scale: 1, fit: BoxFit.scaleDown),
+                                        scale: 2, fit: BoxFit.scaleDown),
                                     Image.asset("assets/images/3.png",
-                                        scale: 1, fit: BoxFit.scaleDown)
+                                        scale: 2, fit: BoxFit.scaleDown)
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
+                        Container(
+                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                             width: MediaQuery.of(context).size.width * 0.3,
                             child: Column(
                               children: [
                                 Container(
-                                  color: Colors.red,
-                                  margin: const EdgeInsets.all(20),
-                                  padding: const EdgeInsets.all(50),
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.26,
+//color: Colors.red,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white),
+                                      color: Colors.red),
+                                  margin: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: const Text(
-                                    "ارتداء وسائل الوقایة اجباري",
+                                    "ارتداء وسائل الوقایة اجباري\n \n PORTER VOS EQUIPEMENTS DE PROTECTION",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontSize: 30,
+                                        fontSize: 26,
                                         color: Colors.white,
                                         decoration: TextDecoration.none),
                                   ),
@@ -487,11 +724,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Image.asset("assets/images/4.png",
-                                        scale: 1, fit: BoxFit.scaleDown),
+                                        scale: 2, fit: BoxFit.scaleDown),
                                     Image.asset("assets/images/5.png",
-                                        scale: 1, fit: BoxFit.scaleDown),
+                                        scale: 2, fit: BoxFit.scaleDown),
                                     Image.asset("assets/images/6.png",
-                                        scale: 1, fit: BoxFit.scaleDown)
+                                        scale: 2, fit: BoxFit.scaleDown)
                                   ],
                                 ),
                               ),

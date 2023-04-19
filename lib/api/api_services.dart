@@ -22,7 +22,7 @@ class GctClientService {
   GctClientService({required this.appProvider});
 
   Future<List<Accidents>> getAccidents() async {
-    String uri = "http://gct.emkatech.tn/accidents";
+    String uri = "http://gctapp.emkatech.tn/accidents";
     var response = await Dio().get(
       uri,
       options: Options(
@@ -54,7 +54,7 @@ class GctClientService {
  
 
  Future updateAccident({required  accidentId, required data}) async {
-    String uri = "http://gct.emkatech.tn/accidents/$accidentId";
+    String uri = "http://gctapp.emkatech.tn/accidents/$accidentId";
     // final queryParameters = <String, dynamic>{"id": maintenanceId};
 
     var response = await Dio().put(

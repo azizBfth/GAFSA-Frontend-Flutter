@@ -5,6 +5,8 @@ class Accidents {
     final message;
 
   final name;
+    final lang;
+
   final createdAt;
   final updatedAt;
 
@@ -13,6 +15,7 @@ class Accidents {
     required this.nbr_jours_sans_accident,
     required this.nbr_totale_accidents,
     required this.name,
+    required this.lang,
     required this.createdAt,
     required this.updatedAt,
     required this.message
@@ -24,6 +27,8 @@ class Accidents {
         nbr_totale_accidents: data["nbr_totale_accidents"],
         nbr_jours_sans_accident: data["nbr_jours_sans_accident"],
         name: data["name"],
+        lang: data["lang"],
+
         message: data["message"],
         createdAt: data["createdAt"],
         updatedAt: data["updatedAt"]);
@@ -36,6 +41,7 @@ class Accidents {
     data['nbr_totale_accidents'] = nbr_totale_accidents;
     data['nbr_jours_sans_accident'] = nbr_jours_sans_accident;
     data["name"] = name;
+    data["lang"] = lang;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
 

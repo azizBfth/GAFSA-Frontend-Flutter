@@ -1,0 +1,10 @@
+^D:\FLUTTERPROJECTS\GAFSA-FRONTEND-FLUTTER\BUILD\WINDOWS\CMAKEFILES\32649EFEDF8AE6ADF477A29C5C21AD4D\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

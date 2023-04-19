@@ -119,6 +119,11 @@ flutter:
       - assets/images/5.png
       - assets/images/6.png
       - assets/images/gct_logo.png
+      - assets/images/logo_name.jpg
+      - assets/images/gct_logo_name.png
+      - assets/images/gct_logo1.png
+      - assets/images/gct_logo2.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
