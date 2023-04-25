@@ -2,24 +2,24 @@ class Accidents {
   final id;
   final nbr_totale_accidents;
   final nbr_jours_sans_accident;
-    final message;
-
+  final message;
+  final temperature;
   final name;
-    final lang;
+  final lang;
 
   final createdAt;
   final updatedAt;
 
-  Accidents({
-    required this.id,
-    required this.nbr_jours_sans_accident,
-    required this.nbr_totale_accidents,
-    required this.name,
-    required this.lang,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.message
-  });
+  Accidents(
+      {required this.id,
+      required this.nbr_jours_sans_accident,
+      required this.nbr_totale_accidents,
+      required this.name,
+      required this.lang,
+      required this.temperature,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.message});
 
   factory Accidents.fromJson(Map<String, dynamic> data) {
     return Accidents(
@@ -28,7 +28,7 @@ class Accidents {
         nbr_jours_sans_accident: data["nbr_jours_sans_accident"],
         name: data["name"],
         lang: data["lang"],
-
+        temperature: data["temperature"],
         message: data["message"],
         createdAt: data["createdAt"],
         updatedAt: data["updatedAt"]);
@@ -42,6 +42,8 @@ class Accidents {
     data['nbr_jours_sans_accident'] = nbr_jours_sans_accident;
     data["name"] = name;
     data["lang"] = lang;
+    temperature["lang"] = temperature;
+
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
 
