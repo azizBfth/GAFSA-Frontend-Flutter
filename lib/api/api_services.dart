@@ -36,7 +36,7 @@ class GctClientService {
 
     if (response.statusCode == 200) {
       final accidents = <Accidents>[];
-      print("RESPONSE:${response.data.length}");
+   //   print("RESPONSE:${response.data.length}");
     //  for (final data in response.data) {
         var item = Accidents.fromJson(response.data as Map<String, dynamic>);
         accidents.add(item);

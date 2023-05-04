@@ -46,4 +46,3 @@ D:/flutterProjects/GAFSA-Frontend-Flutter/build/windows/runner/Debug/data/flutte
 D:/flutterProjects/GAFSA-Frontend-Flutter/build/windows/runner/Debug/data/flutter_assets/packages/window_manager/images/ic_chrome_minimize.png
 D:/flutterProjects/GAFSA-Frontend-Flutter/build/windows/runner/Debug/data/flutter_assets/packages/window_manager/images/ic_chrome_unmaximize.png
 D:/flutterProjects/GAFSA-Frontend-Flutter/build/windows/runner/Debug/data/flutter_assets/shaders/ink_sparkle.frag
-D:/flutterProjects/GAFSA-Frontend-Flutter/build/windows/runner/Debug/data/flutter_assets/version.json

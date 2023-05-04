@@ -221,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     if (_formKey.currentState!.validate()) {
                       //API CALL
                       String lang =
-                          messageController.text.contains(RegExp(r'[a-z]'))
+                          messageController.text.contains(RegExp(r'[a-zA-Z]'))
                               ? "Fr"
                               : "Ar";
                       var item = {
@@ -282,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         onWillPop: () async => false,
         child: Scaffold(
             body: Container(
-                color: Colors.black,
+                color: Color(0XFFFEFEE2),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Column(
@@ -357,7 +357,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.white,
+                                      color: Colors.red,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -369,7 +369,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.white,
+                                      color: Colors.red,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -452,7 +452,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                           .message
                                                           .toString()
                                                           .contains(
-                                                              RegExp(r'[a-z]'))
+                                                              RegExp(r'[a-zA-Z]'))
                                                       ? 30
                                                       : -30,
                                                   // pauseAfterRound: const Duration(seconds: 2),
@@ -477,7 +477,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 24,
-                                      color: Colors.white,
+                                      color: Colors.red,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -610,7 +610,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.white,
+                                      color: Colors.red,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -675,7 +675,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 Container(
                                     child: IconButton(
                                   iconSize: 50,
-                                  color: Colors.blue,
+                                  color: Colors.red,
                                   onPressed: () {
                                     showUpdateCarte(context);
                                   },
@@ -696,7 +696,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.white,
+                                      color: Colors.red,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
