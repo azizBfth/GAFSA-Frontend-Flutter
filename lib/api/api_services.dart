@@ -36,12 +36,12 @@ class GctClientService {
 
     if (response.statusCode == 200) {
       final accidents = <Accidents>[];
-   //   print("RESPONSE:${response.data.length}");
-    //  for (final data in response.data) {
-        var item = Accidents.fromJson(response.data as Map<String, dynamic>);
-        accidents.add(item);
-        print("ITEM TOTAL JRS:: ${item.nbr_totale_accidents}");
-    //  }
+      //   print("RESPONSE:${response.data.length}");
+      //  for (final data in response.data) {
+      var item = Accidents.fromJson(response.data as Map<String, dynamic>);
+      accidents.add(item);
+      print("ITEM TOTAL JRS:: ${item.nbr_totale_accidents}");
+      //  }
 
       appProvider.setAccidents(accidents);
 
@@ -51,7 +51,7 @@ class GctClientService {
     }
   }
 
-  Future updateAccident({required accidentId, required data}) async {
+  Future<bool> updateAccident({required accidentId, required data}) async {
     String uri = "http://gctapp.emkatech.tn/accidents/$accidentId";
     // final queryParameters = <String, dynamic>{"id": maintenanceId};
 
@@ -69,12 +69,11 @@ class GctClientService {
     );
     if (response.statusCode == 200) {
       print("ITEM::$data");
-
-      print('accident Form Updated');
+      return true;
     } else {
       print("accident Form Not Updated");
-
-      throw Exception("Unexpected Happened !");
+      return false;
+      //throw Exception("Unexpected Happened !");
     }
   }
 }

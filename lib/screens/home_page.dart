@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   late bool isMessagedDisplayed = true;
 
   late String _timeString;
-
+  late bool isUpdated = false;
   final Color dataBgColor = const Color.fromARGB(235, 22, 67, 140);
   late List<Accidents> _accidentsList = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -176,10 +176,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  Future _updateAccident(accidentId, data) async {
+  Future _updateAccident(accidentId, data, context) async {
     await GctClientService(appProvider: _appProvider)
         .updateAccident(accidentId: accidentId, data: data)
-        .then((value) => _onRefresh());
+        .then((value) => {
+              print("VALUEVALUE:${value}"),
+              setState(() {
+                isUpdated = value;
+              }),
+              _onRefresh()
+            });
   }
 
   // onRefresh //
@@ -231,14 +237,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         "nbr_totale_accidents":
                             int.parse(nbTotaleAccidentsController.text),
                         "message": messageController.text,
-                        "lang":lang
+                        "lang": lang
                       };
 
                       print(lang);
 
-                      _updateAccident(
-                          _accidentsList.elementAt(0).id.toString(), item);
-
+                      _updateAccident(_accidentsList.elementAt(0).id.toString(),
+                          item, context);
+                      if (isUpdated) {
+                        
+                        print("success");
+                        
+                      } else {
+                        print("error !! ");
+                      }
                       Navigator.pop(context);
                     }
                   },
@@ -357,7 +369,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -369,7 +381,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -451,8 +463,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                           .elementAt(0)
                                                           .message
                                                           .toString()
-                                                          .contains(
-                                                              RegExp(r'[a-zA-Z]'))
+                                                          .contains(RegExp(
+                                                              r'[a-zA-Z]'))
                                                       ? 30
                                                       : -30,
                                                   // pauseAfterRound: const Duration(seconds: 2),
@@ -477,7 +489,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 24,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -610,7 +622,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -637,12 +649,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset("assets/images/1.png",
-                                        scale: 2, fit: BoxFit.scaleDown),
-                                    Image.asset("assets/images/2.png",
-                                        scale: 2, fit: BoxFit.scaleDown),
-                                    Image.asset("assets/images/3.png",
-                                        scale: 2, fit: BoxFit.scaleDown)
+                                    Image.asset("assets/images/b1.png",
+                                        scale: 5, fit: BoxFit.scaleDown),
+                                    Image.asset("assets/images/b2.png",
+                                        scale: 5, fit: BoxFit.scaleDown),
+                                    Image.asset("assets/images/b3.png",
+                                        scale: 5, fit: BoxFit.scaleDown)
                                   ],
                                 ),
                               ),
@@ -675,7 +687,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 Container(
                                     child: IconButton(
                                   iconSize: 50,
-                                  color: Colors.red,
+                                  color: Colors.blue,
                                   onPressed: () {
                                     showUpdateCarte(context);
                                   },
@@ -696,7 +708,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: Colors.red,
+                                      color: Colors.blue,
                                       decoration: TextDecoration.none),
                                 ),
                               ),
@@ -723,12 +735,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset("assets/images/4.png",
-                                        scale: 2, fit: BoxFit.scaleDown),
-                                    Image.asset("assets/images/5.png",
-                                        scale: 2, fit: BoxFit.scaleDown),
-                                    Image.asset("assets/images/6.png",
-                                        scale: 2, fit: BoxFit.scaleDown)
+                                    Image.asset("assets/images/b4.png",
+                                        scale: 5, fit: BoxFit.scaleDown),
+                                    Image.asset("assets/images/b5.png",
+                                        scale: 5, fit: BoxFit.scaleDown),
+                                    Image.asset("assets/images/b6.png",
+                                        scale: 5, fit: BoxFit.scaleDown)
                                   ],
                                 ),
                               ),
