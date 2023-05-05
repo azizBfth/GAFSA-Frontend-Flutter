@@ -23,57 +23,67 @@ class GctClientService {
 
   Future<List<Accidents>> getAccidents() async {
     String uri = "http://gctapp.emkatech.tn/accidents";
-    var response = await Dio().get(
-      uri,
-      options: Options(
-        contentType: "application/json",
-        headers: <String, dynamic>{
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-      ),
-    );
+    try {
+      var response = await Dio().get(
+        uri,
+        options: Options(
+          contentType: "application/json",
+          headers: <String, dynamic>{
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      final accidents = <Accidents>[];
-      //   print("RESPONSE:${response.data.length}");
-      //  for (final data in response.data) {
-      var item = Accidents.fromJson(response.data as Map<String, dynamic>);
-      accidents.add(item);
-      print("ITEM TOTAL JRS:: ${item.nbr_totale_accidents}");
-      //  }
+      if (response.statusCode == 200) {
+        final accidents = <Accidents>[];
+        //   print("RESPONSE:${response.data.length}");
+        //  for (final data in response.data) {
+        var item = Accidents.fromJson(response.data as Map<String, dynamic>);
+        accidents.add(item);
+        print("ITEM TOTAL JRS:: ${item.nbr_totale_accidents}");
+        //  }
 
-      appProvider.setAccidents(accidents);
+        appProvider.setAccidents(accidents);
 
-      return accidents;
-    } else {
-      throw Exception("Unexpected Happened !");
+        return accidents;
+      } else {
+        throw Exception("Unexpected Happened !");
+      }
+    } catch (error) {
+      print("Error:$error");
+
+      return appProvider.getAccidents();
     }
   }
 
   Future<bool> updateAccident({required accidentId, required data}) async {
     String uri = "http://gctapp.emkatech.tn/accidents/$accidentId";
     // final queryParameters = <String, dynamic>{"id": maintenanceId};
-
-    var response = await Dio().put(
-      uri,
-      data: data,
-      //  queryParameters: queryParameters,
-      options: Options(
-        contentType: "application/json",
-        headers: <String, dynamic>{
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      print("ITEM::$data");
-      return true;
-    } else {
-      print("accident Form Not Updated");
+    try {
+      var response = await Dio().put(
+        uri,
+        data: data,
+        //  queryParameters: queryParameters,
+        options: Options(
+          contentType: "application/json",
+          headers: <String, dynamic>{
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        print("ITEM::$data");
+        return true;
+      } else {
+        print("accident Form Not Updated");
+        return false;
+        //throw Exception("Unexpected Happened !");
+      }
+    } catch (error) {
+      print("Error:$error");
       return false;
-      //throw Exception("Unexpected Happened !");
     }
   }
 }

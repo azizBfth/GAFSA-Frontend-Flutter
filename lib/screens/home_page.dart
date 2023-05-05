@@ -245,9 +245,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                       _updateAccident(_accidentsList.elementAt(0).id.toString(),
                           item, context);
                       if (isUpdated) {
-                        
                         print("success");
-                        
                       } else {
                         print("error !! ");
                       }
