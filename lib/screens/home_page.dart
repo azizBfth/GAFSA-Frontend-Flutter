@@ -43,6 +43,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   TextEditingController nbTotaleAccidentsController = TextEditingController(),
       nbrJrsSansAccidentsController = TextEditingController(),
       messageController = TextEditingController();
+
+      final GlobalKey<ScaffoldMessengerState> snackbarKey =
+    GlobalKey<ScaffoldMessengerState>();
+
   @override
   void initState() {
     super.initState();
@@ -483,7 +487,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 alignment: Alignment.center,
                                 width: MediaQuery.of(context).size.width * 0.2,
                                 child: const Text(
-                                  "رسالة اليوم\nMESSAGE DU JOUR",
+                                  "رسالة اليوم\nMESSAGE DE JOUR",
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                       fontSize: 24,
@@ -493,118 +497,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               ),
                             ]),
 
-                            /*     Row(children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                      height: 50,
-                                      child: const Text(
-                                        "التاريخ \n   ",
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.25,
-                                      padding: const EdgeInsets.all(10),
-                                      margin: const EdgeInsets.all(20),
-                                      color: Colors.grey[600],
-                                      child: Text(
-                                        "${DateFormat('dd-MM-yyyy').format(DateTime.now())}",
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              /*   Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: Column(
-                            children: [
-                              Container(
-                                child: Image.asset("assets/images/gct_logo.png",
-                                    scale: 1, fit: BoxFit.scaleDown),
-                              ),
-                              const SizedBox(
-                                height: 150,
-                                child: Text(
-                                  "\nGroupe Chimique Tunisien \n المجمع الكیمیائي التونسي ",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.green,
-                                      decoration: TextDecoration.none),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                     */
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                      height: 50,
-                                      child: const Text(
-                                        "التوقيت \n   ",
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            color: Colors.white,
-                                            decoration: TextDecoration.none),
-                                      ),
-                                    ),
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.25,
-                                        padding: const EdgeInsets.all(10),
-                                        margin: const EdgeInsets.all(20),
-                                        color: Colors.grey[600],
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              temperature.toString() + "°C",
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.orange,
-                                                  decoration:
-                                                      TextDecoration.none),
-                                            ),
-                                            Text(
-                                              _timeString,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  fontSize: 30,
-                                                  color: Colors.white,
-                                                  decoration:
-                                                      TextDecoration.none),
-                                            ),
-                                          ],
-                                        )),
-                                  ],
-                                ),
-                              )
-                            ]),
-                       */
-                          ],
+                      ],
                         )),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.5,
@@ -616,7 +509,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               const SizedBox(
                                 height: 150,
                                 child: Text(
-                                  "Nombre des jours sans accidents de travail \n عدد الأيام بدون حوادث شغل",
+                                  "عدد الأيام بدون حوادث شغل \n Nombre des jours sans accident de travail",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
@@ -702,7 +595,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               const SizedBox(
                                 height: 150,
                                 child: Text(
-                                  "Nombre totale des accidents de travail \n العدد الجملي لحوادث الشغل",
+                                  "العدد الجملي لحوادث الشغل \n Nombre total d'accident de travail",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
